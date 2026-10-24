@@ -1,0 +1,11 @@
+# Environment variables and secrets
+.env
+
+# Go build output
+/bin/
+/dist/
+
+# Local editor and operating system files
+.vscode/
+.DS_Store
+Thumbs.db
