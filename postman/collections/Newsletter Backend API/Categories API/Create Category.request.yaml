@@ -1,0 +1,14 @@
+$kind: http-request
+description: ""
+url: http://localhost:8080/categories
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"Technology\", \r
+
+    \    \"slug\": \"technology\"\r
+
+    }"
+order: 1000

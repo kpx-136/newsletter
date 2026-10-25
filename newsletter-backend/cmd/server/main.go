@@ -27,7 +27,9 @@ func main() {
 	mux := http.NewServeMux()
 	queries := db.New(pool)
 	articles := apphttp.NewArticleHandler(queries)
+	categories := apphttp.NewCategoryHandler(queries)
 
+	//ARTICLE ROUTES
 	mux.HandleFunc("GET /health", apphttp.HealthHandler)
 	mux.HandleFunc("GET /articles", articles.ListPublished)
 	mux.HandleFunc("GET /articles/all", articles.ListAll)
@@ -35,6 +37,10 @@ func main() {
 	mux.HandleFunc("POST /articles", articles.Create)
 	mux.HandleFunc("PUT /articles/{id}", articles.Update)
 	mux.HandleFunc("DELETE /articles/{id}", articles.Delete)
+
+	//CATEGORY ROUTES
+	mux.HandleFunc("GET /categories", categories.List)
+	mux.HandleFunc("POST /categories", categories.Create)
 
 	server := &http.Server{
 		Addr:              ":8080",

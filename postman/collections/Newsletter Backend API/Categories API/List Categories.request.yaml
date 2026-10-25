@@ -1,0 +1,4 @@
+$kind: http-request
+description: ""
+url: http://localhost:8080/categories
+method: GET
