@@ -1,0 +1,5 @@
+$kind: http-request
+description: ""
+url: http://localhost:8080/articles/51db0e6e-e70e-4206-9976-c465355a5d9b/comments
+method: GET
+order: 1000

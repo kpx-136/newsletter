@@ -29,6 +29,7 @@ func main() {
 	articles := apphttp.NewArticleHandler(queries)
 	categories := apphttp.NewCategoryHandler(queries)
 	subscribers := apphttp.NewSubscriberHandler(queries)
+	comments := apphttp.NewCommentHandler(queries)
 
 	//ARTICLE ROUTES
 	mux.HandleFunc("GET /health", apphttp.HealthHandler)
@@ -46,6 +47,10 @@ func main() {
 	//SUBSCRIBER ROUTES
 	mux.HandleFunc("GET /subscribers", subscribers.List)
 	mux.HandleFunc("POST /subscribe", subscribers.Subscribe)
+
+	//SUBSCRIBER ROUTES
+	mux.HandleFunc("GET /articles/{id}/comments", comments.List)
+	mux.HandleFunc("POST /articles/{id}/comments", comments.Create)
 
 	server := &http.Server{
 		Addr:              ":8080",
