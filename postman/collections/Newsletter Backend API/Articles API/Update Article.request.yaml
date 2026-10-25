@@ -1,0 +1,56 @@
+$kind: http-request
+description: ""
+url: http://localhost:8080/articles/78527dd3-ce9f-4aee-8083-41156c2b063a
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \  \"slug\": \"my-first-newsletter\",\r
+
+    \  \"title\": \"Updating this hehe\",\r
+
+    \  \"description\": \"An introduction to our newsletter.\",\r
+
+    \  \"contents\": {\r
+
+    \    \"type\": \"doc\",\r
+
+    \    \"content\": [\r
+
+    \      {\r
+
+    \        \"type\": \"paragraph\",\r
+
+    \        \"content\": [\r
+
+    \          {\r
+
+    \            \"type\": \"text\",\r
+
+    \            \"text\": \"Hello from my newsletter backend!\"\r
+
+    \          }\r
+
+    \        ]\r
+
+    \      }\r
+
+    \    ]\r
+
+    \  },\r
+
+    \  \"cover_image\": null,\r
+
+    \  \"tags\": [\"welcome\", \"newsletter\"],\r
+
+    \  \"category_id\": null,\r
+
+    \  \"status\": \"published\",\r
+
+    \  \"type\": \"newsletter\",\r
+
+    \  \"estimated_read_time\": 2\r
+
+    }"
+order: 6000

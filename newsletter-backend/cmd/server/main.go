@@ -25,7 +25,16 @@ func main() {
 	defer pool.Close()
 
 	mux := http.NewServeMux()
+	queries := db.New(pool)
+	articles := apphttp.NewArticleHandler(queries)
+
 	mux.HandleFunc("GET /health", apphttp.HealthHandler)
+	mux.HandleFunc("GET /articles", articles.ListPublished)
+	mux.HandleFunc("GET /articles/all", articles.ListAll)
+	mux.HandleFunc("GET /articles/{slug}", articles.GetBySlug)
+	mux.HandleFunc("POST /articles", articles.Create)
+	mux.HandleFunc("PUT /articles/{id}", articles.Update)
+	mux.HandleFunc("DELETE /articles/{id}", articles.Delete)
 
 	server := &http.Server{
 		Addr:              ":8080",

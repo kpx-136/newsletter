@@ -1,0 +1,5 @@
+$kind: http-request
+description: ""
+url: http://localhost:8080/articles/78527dd3-ce9f-4aee-8083-41156c2b063a
+method: DELETE
+order: 7000

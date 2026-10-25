@@ -13,9 +13,13 @@ import (
 
 const createArticle = `-- name: CreateArticle :one
 INSERT INTO articles (
-    slug, title, description, contents, cover_image, tags, category_id, status, type, estimated_read_time
+    slug, title, description, contents, cover_image, tags, category_id, status, type, estimated_read_time, published_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 
+    CASE 
+        WHEN $8 = 'published' THEN NOW()
+        ELSE NULL
+    END
 ) RETURNING id, slug, title, description, contents, cover_image, published_at, tags, category_id, status, type, estimated_read_time, created_at
 `
 
@@ -213,7 +217,14 @@ UPDATE articles SET
     category_id = $8,
     status = $9,
     type = $10,
-    estimated_read_time = $11
+    estimated_read_time = $11, 
+    published_at = CASE
+        WHEN $9 = 'published' AND published_at IS NULL
+            THEN NOW()
+        WHEN $9 <> 'published'
+            THEN NULL
+        ELSE published_at
+    END
 WHERE id = $1 RETURNING id, slug, title, description, contents, cover_image, published_at, tags, category_id, status, type, estimated_read_time, created_at
 `
 
