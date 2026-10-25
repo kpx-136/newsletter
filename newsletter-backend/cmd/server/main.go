@@ -3,11 +3,12 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
+	"net/http"
 	"time"
 
 	"newsletter-backend/internal/db"
+	apphttp "newsletter-backend/internal/http"
 )
 
 func main() {
@@ -23,5 +24,19 @@ func main() {
 	}
 	defer pool.Close()
 
-	fmt.Println("Successfully connected to PostgreSQL!")
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /health", apphttp.HealthHandler)
+
+	server := &http.Server{
+		Addr:              ":8080",
+		Handler:           mux,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+
+	log.Println("Server listening on http://localhost:8080")
+
+	if err := server.ListenAndServe(); err != nil &&
+		err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
 }
