@@ -29,3 +29,19 @@ type Category struct {
 	Name string
 	Slug string
 }
+
+type Comment struct {
+	ID         pgtype.UUID
+	ArticleID  pgtype.UUID
+	AuthorName pgtype.Text
+	Content    string
+	CreatedAt  pgtype.Timestamptz
+}
+
+type Subscriber struct {
+	ID               pgtype.UUID
+	Email            string
+	SubscribedAt     pgtype.Timestamptz
+	IsVerified       bool
+	UnsubscribeToken pgtype.Text
+}
