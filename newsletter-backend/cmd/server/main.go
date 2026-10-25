@@ -28,6 +28,7 @@ func main() {
 	queries := db.New(pool)
 	articles := apphttp.NewArticleHandler(queries)
 	categories := apphttp.NewCategoryHandler(queries)
+	subscribers := apphttp.NewSubscriberHandler(queries)
 
 	//ARTICLE ROUTES
 	mux.HandleFunc("GET /health", apphttp.HealthHandler)
@@ -41,6 +42,10 @@ func main() {
 	//CATEGORY ROUTES
 	mux.HandleFunc("GET /categories", categories.List)
 	mux.HandleFunc("POST /categories", categories.Create)
+
+	//SUBSCRIBER ROUTES
+	mux.HandleFunc("GET /subscribers", subscribers.List)
+	mux.HandleFunc("POST /subscribe", subscribers.Subscribe)
 
 	server := &http.Server{
 		Addr:              ":8080",
