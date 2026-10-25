@@ -101,6 +101,69 @@ func (q *Queries) GetArticle(ctx context.Context, id pgtype.UUID) (Article, erro
 	return i, err
 }
 
+const getArticleBySlug = `-- name: GetArticleBySlug :one
+SELECT id, slug, title, description, contents, cover_image, published_at, tags, category_id, status, type, estimated_read_time, created_at FROM articles WHERE slug = $1 LIMIT 1
+`
+
+func (q *Queries) GetArticleBySlug(ctx context.Context, slug string) (Article, error) {
+	row := q.db.QueryRow(ctx, getArticleBySlug, slug)
+	var i Article
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.Title,
+		&i.Description,
+		&i.Contents,
+		&i.CoverImage,
+		&i.PublishedAt,
+		&i.Tags,
+		&i.CategoryID,
+		&i.Status,
+		&i.Type,
+		&i.EstimatedReadTime,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const listAllArticles = `-- name: ListAllArticles :many
+SELECT id, slug, title, description, contents, cover_image, published_at, tags, category_id, status, type, estimated_read_time, created_at FROM articles ORDER BY created_at DESC
+`
+
+func (q *Queries) ListAllArticles(ctx context.Context) ([]Article, error) {
+	rows, err := q.db.Query(ctx, listAllArticles)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Article
+	for rows.Next() {
+		var i Article
+		if err := rows.Scan(
+			&i.ID,
+			&i.Slug,
+			&i.Title,
+			&i.Description,
+			&i.Contents,
+			&i.CoverImage,
+			&i.PublishedAt,
+			&i.Tags,
+			&i.CategoryID,
+			&i.Status,
+			&i.Type,
+			&i.EstimatedReadTime,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listPublishedArticles = `-- name: ListPublishedArticles :many
 SELECT id, slug, title, description, contents, cover_image, published_at, tags, category_id, status, type, estimated_read_time, created_at FROM articles WHERE status = 'published' ORDER BY published_at DESC
 `
@@ -137,4 +200,66 @@ func (q *Queries) ListPublishedArticles(ctx context.Context) ([]Article, error) 
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateArticle = `-- name: UpdateArticle :one
+UPDATE articles SET
+    slug = $2, 
+    title = $3,
+    description = $4,
+    contents = $5,
+    cover_image = $6,
+    tags = $7,
+    category_id = $8,
+    status = $9,
+    type = $10,
+    estimated_read_time = $11
+WHERE id = $1 RETURNING id, slug, title, description, contents, cover_image, published_at, tags, category_id, status, type, estimated_read_time, created_at
+`
+
+type UpdateArticleParams struct {
+	ID                pgtype.UUID
+	Slug              string
+	Title             string
+	Description       string
+	Contents          []byte
+	CoverImage        pgtype.Text
+	Tags              []string
+	CategoryID        pgtype.UUID
+	Status            string
+	Type              string
+	EstimatedReadTime int32
+}
+
+func (q *Queries) UpdateArticle(ctx context.Context, arg UpdateArticleParams) (Article, error) {
+	row := q.db.QueryRow(ctx, updateArticle,
+		arg.ID,
+		arg.Slug,
+		arg.Title,
+		arg.Description,
+		arg.Contents,
+		arg.CoverImage,
+		arg.Tags,
+		arg.CategoryID,
+		arg.Status,
+		arg.Type,
+		arg.EstimatedReadTime,
+	)
+	var i Article
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.Title,
+		&i.Description,
+		&i.Contents,
+		&i.CoverImage,
+		&i.PublishedAt,
+		&i.Tags,
+		&i.CategoryID,
+		&i.Status,
+		&i.Type,
+		&i.EstimatedReadTime,
+		&i.CreatedAt,
+	)
+	return i, err
 }
