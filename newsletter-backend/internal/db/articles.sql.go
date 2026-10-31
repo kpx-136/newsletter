@@ -131,31 +131,47 @@ func (q *Queries) GetArticleBySlug(ctx context.Context, slug string) (Article, e
 }
 
 const listAllArticles = `-- name: ListAllArticles :many
-SELECT id, slug, title, description, contents, cover_image, published_at, tags, category_id, status, type, estimated_read_time, created_at FROM articles ORDER BY created_at DESC
+SELECT
+    id, slug, title, description, cover_image, tags, category_id, status, type, estimated_read_time, published_at, created_at
+FROM articles ORDER BY created_at DESC
 `
 
-func (q *Queries) ListAllArticles(ctx context.Context) ([]Article, error) {
+type ListAllArticlesRow struct {
+	ID                pgtype.UUID
+	Slug              string
+	Title             string
+	Description       string
+	CoverImage        pgtype.Text
+	Tags              []string
+	CategoryID        pgtype.UUID
+	Status            string
+	Type              string
+	EstimatedReadTime int32
+	PublishedAt       pgtype.Timestamptz
+	CreatedAt         pgtype.Timestamptz
+}
+
+func (q *Queries) ListAllArticles(ctx context.Context) ([]ListAllArticlesRow, error) {
 	rows, err := q.db.Query(ctx, listAllArticles)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Article
+	var items []ListAllArticlesRow
 	for rows.Next() {
-		var i Article
+		var i ListAllArticlesRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.Slug,
 			&i.Title,
 			&i.Description,
-			&i.Contents,
 			&i.CoverImage,
-			&i.PublishedAt,
 			&i.Tags,
 			&i.CategoryID,
 			&i.Status,
 			&i.Type,
 			&i.EstimatedReadTime,
+			&i.PublishedAt,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -169,32 +185,46 @@ func (q *Queries) ListAllArticles(ctx context.Context) ([]Article, error) {
 }
 
 const listPublishedArticles = `-- name: ListPublishedArticles :many
-SELECT id, slug, title, description, contents, cover_image, published_at, tags, category_id, status, type, estimated_read_time, created_at FROM articles WHERE status = 'published' ORDER BY published_at DESC
+SELECT 
+    id, slug, title, description, cover_image, tags, category_id, status, type, estimated_read_time, published_at
+FROM articles WHERE status = 'published' ORDER BY published_at DESC
 `
 
-func (q *Queries) ListPublishedArticles(ctx context.Context) ([]Article, error) {
+type ListPublishedArticlesRow struct {
+	ID                pgtype.UUID
+	Slug              string
+	Title             string
+	Description       string
+	CoverImage        pgtype.Text
+	Tags              []string
+	CategoryID        pgtype.UUID
+	Status            string
+	Type              string
+	EstimatedReadTime int32
+	PublishedAt       pgtype.Timestamptz
+}
+
+func (q *Queries) ListPublishedArticles(ctx context.Context) ([]ListPublishedArticlesRow, error) {
 	rows, err := q.db.Query(ctx, listPublishedArticles)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Article
+	var items []ListPublishedArticlesRow
 	for rows.Next() {
-		var i Article
+		var i ListPublishedArticlesRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.Slug,
 			&i.Title,
 			&i.Description,
-			&i.Contents,
 			&i.CoverImage,
-			&i.PublishedAt,
 			&i.Tags,
 			&i.CategoryID,
 			&i.Status,
 			&i.Type,
 			&i.EstimatedReadTime,
-			&i.CreatedAt,
+			&i.PublishedAt,
 		); err != nil {
 			return nil, err
 		}

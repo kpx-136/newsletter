@@ -1,4 +1,3 @@
-
 package http
 
 import (
@@ -39,7 +38,7 @@ func (h *CategoryHandler) List(w http.ResponseWriter, r *http.Request) {
 }
 
 type CreateCategoryRequest struct {
-	Name string `json: "name"` 
+	Name string `json: "name"`
 	Slug string `json: "slug"`
 }
 
@@ -76,9 +75,28 @@ func (h *CategoryHandler) Create(w http.ResponseWriter, r *http.Request) {
 		Name: req.Name,
 		Slug: req.Slug,
 	})
+
 	if err != nil {
 		log.Printf("create category: %v", err)
-		http.Error(w, "Could not create category", http.StatusInternalServerError)
+
+		if isUniqueViolation(err) {
+			writeAPIError(
+				w,
+				http.StatusConflict,
+				"DUPLICATE_CATEGORY",
+				"Category already exists.",
+				"A category with this name or slug already exists. Try a different one.",
+			)
+			return
+		}
+
+		writeAPIError(
+			w,
+			http.StatusInternalServerError,
+			"CATEGORY_CREATE_FAILED",
+			"Could not create the category.",
+			"Please try again later.",
+		)
 		return
 	}
 

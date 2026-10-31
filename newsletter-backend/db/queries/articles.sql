@@ -13,13 +13,17 @@ INSERT INTO articles (
 SELECT * FROM articles WHERE id = $1 LIMIT 1; 
 
 -- name: ListPublishedArticles :many
-SELECT * FROM articles WHERE status = 'published' ORDER BY published_at DESC;
+SELECT 
+    id, slug, title, description, cover_image, tags, category_id, status, type, estimated_read_time, published_at
+FROM articles WHERE status = 'published' ORDER BY published_at DESC;
 
 -- name: DeleteArticle :execrows
 DELETE FROM articles WHERE id = $1; 
 
 -- name: ListAllArticles :many
-SELECT * FROM articles ORDER BY created_at DESC; 
+SELECT
+    id, slug, title, description, cover_image, tags, category_id, status, type, estimated_read_time, published_at, created_at
+FROM articles ORDER BY created_at DESC; 
 
 -- name: GetArticleBySlug :one
 SELECT * FROM articles WHERE slug = $1 LIMIT 1; 
