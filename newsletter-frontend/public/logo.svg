@@ -1,0 +1,40 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .line {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 14;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .fill {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+
+  <!-- Outer archive frame -->
+  <rect x="96" y="96" width="320" height="320" rx="42" class="line"/>
+
+  <!-- Photo frame -->
+  <rect x="146" y="146" width="220" height="180" rx="18" class="line"/>
+
+  <!-- Mountain -->
+  <path d="M170 290 L235 220 L285 270 L330 225 L342 290 Z" class="line"/>
+
+  <!-- Sun -->
+  <circle cx="300" cy="190" r="18" class="fill"/>
+
+  <!-- Cute heart -->
+  <path d="M256 372
+           C256 372 206 334 206 296
+           C206 272 224 256 246 256
+           C258 256 268 262 276 274
+           C284 262 294 256 306 256
+           C328 256 346 272 346 296
+           C346 334 296 372 296 372
+           Z"
+        transform="translate(0,40) scale(0.6)"
+        class="fill"/>
+</svg>

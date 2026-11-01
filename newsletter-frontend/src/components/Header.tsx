@@ -1,15 +1,8 @@
-
-function Header() {
+export const Header = function() {
     return (
-        <header>
-            <h1>the newsletter.</h1>
-            <nav>
-                <a href="/">Home</a>
-                <a href="/articles">Articles</a>
-                <a href="/about">About</a>
-            </nav>
+        <header className = "site-header">
+            <a href = "/" className = "header-logo">ARCHIVE</a>
+            <a href = "/subscribe" className = "subscribe-button">Subscribe <span>&#x2197;</span></a>
         </header>
     );
 }
-
-export default Header;
