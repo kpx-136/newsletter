@@ -123,7 +123,7 @@ func validateArticleRequest(req *CreateArticleRequest) *APIError {
 		}
 	}
 
-	if req.EstimatedReadTime < 1 || req.EstimatedReadTime < 1 {
+	if req.EstimatedReadTime < 1 {
 		return &APIError{
 			Code:    "VALIDATION_ERROR",
 			Message: "Invalid estimated reading time.",
@@ -286,7 +286,7 @@ func (h *ArticleHandler) Create(
 
 	var categoryID pgtype.UUID
 
-	if req.CategoryID != "" && req.CategoryID != "" {
+	if req.CategoryID != "" {
 		if err := categoryID.Scan(req.CategoryID); err != nil {
 			writeAPIError(
 				w,
@@ -393,7 +393,7 @@ func (h *ArticleHandler) Update(
 
 	var categoryID pgtype.UUID
 
-	if req.CategoryID != "" && req.CategoryID != "" {
+	if req.CategoryID != "" {
 		if err := categoryID.Scan(req.CategoryID); err != nil {
 			writeAPIError(
 				w,
