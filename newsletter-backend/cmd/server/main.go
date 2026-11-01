@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -52,9 +51,11 @@ func main() {
 	mux.HandleFunc("GET /articles/{id}/comments", comments.List)
 	mux.HandleFunc("POST /articles/{id}/comments", comments.Create)
 
+	handler := apphttp.EnableCORS(mux)
+
 	server := &http.Server{
 		Addr:              ":8080",
-		Handler:           mux,
+		Handler:           handler,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 

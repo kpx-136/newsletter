@@ -1,16 +1,16 @@
 $kind: http-request
 description: ""
-url: http://localhost:8080/articles/78527dd3-ce9f-4aee-8083-41156c2b063a
+url: http://localhost:8080/articles/cfaa2948-cfa4-4e95-93e9-5a855796003a
 method: PUT
 body:
   type: json
   content: "{\r
 
-    \  \"slug\": \"my-first-newsletter\",\r
+    \  \"Slug\": \"article-with-image\",\r
 
-    \  \"title\": \"Updating this hehe\",\r
+    \  \"Title\": \"Had to create one hehe\",\r
 
-    \  \"description\": \"An introduction to our newsletter.\",\r
+    \  \"Description\": \"meow meow meow meow meow. \",\r
 
     \  \"contents\": {\r
 
@@ -40,7 +40,7 @@ body:
 
     \  },\r
 
-    \  \"cover_image\": null,\r
+    \  \"cover_image\": \"https://upload.wikimedia.org/wikipedia/commons/5/53/Sheba1.JPG?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled\",\r
 
     \  \"tags\": [\"welcome\", \"newsletter\"],\r
 

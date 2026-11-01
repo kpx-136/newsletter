@@ -1,13 +1,13 @@
 export interface Article {
-    id: string; 
-    slug: string; 
-    title: string; 
-    description: string; 
-    coverImage: string | null; 
-    tags: string[]; 
-    categoryId: string | null; 
-    status: string; 
-    type: string; 
-    estimatedReadTime: number; 
-    publishedAt: string; 
+    ID: string; 
+    Slug: string; 
+    Title: string; 
+    Description: string; 
+    CoverImage: string | null; 
+    Tags: string[]; 
+    CategoryId: string | null; 
+    Status: string; 
+    Type: string; 
+    EstimatedReadTime: number; 
+    PublishedAt: string; 
 }
