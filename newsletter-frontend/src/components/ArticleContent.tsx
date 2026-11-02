@@ -1,5 +1,6 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Image from '@tiptap/extension-image';
 import type { JSONContent } from '@tiptap/core';
 
 interface ArticleContentProps {
@@ -8,7 +9,13 @@ interface ArticleContentProps {
 
 export const ArticleContent = ({ content }: ArticleContentProps) => {
     const editor = useEditor({
-        extensions: [StarterKit],
+        extensions: [
+            StarterKit,
+            Image.configure({
+                inline: false,
+                allowBase64: true,
+            }),
+        ],
         content: {
             type: 'doc',
             content: content?.content ?? [],
