@@ -56,6 +56,13 @@ func (h *CommentHandler) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	for i := range comments {
+		if comments[i].CreatedAt.Valid {
+			comments[i].CreatedAt.Time =
+				comments[i].CreatedAt.Time.UTC()
+		}
+	}
+
 	if err := json.NewEncoder(w).Encode(comments); err != nil {
 		log.Printf("encode comments: %v", err)
 	}
@@ -72,6 +79,18 @@ func (h *CommentHandler) Create(w http.ResponseWriter, r *http.Request) {
 	articleID, err := parseArticleID(r.PathValue("id"))
 	if err != nil {
 		http.Error(w, "Invalid article ID", http.StatusBadRequest)
+		return
+	}
+
+	exists, err := h.articleExists(r.Context(), articleID)
+	if err != nil {
+		log.Printf("check article before creating comment: %v", err)
+		http.Error(w, "Could not create comment", http.StatusInternalServerError)
+		return
+	}
+
+	if !exists {
+		http.Error(w, "Article not found", http.StatusNotFound)
 		return
 	}
 
@@ -129,6 +148,10 @@ func (h *CommentHandler) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 
+	if comment.CreatedAt.Valid {
+		comment.CreatedAt.Time = comment.CreatedAt.Time.UTC()
+	}
+
 	if err := json.NewEncoder(w).Encode(comment); err != nil {
 		log.Printf("encode created comment: %v", err)
 	}
@@ -139,7 +162,6 @@ func parseArticleID(value string) (pgtype.UUID, error) {
 	err := id.Scan(value)
 	return id, err
 }
-
 
 func (h *CommentHandler) articleExists(
 	ctx context.Context,
