@@ -8,9 +8,16 @@ import (
 
 	"newsletter-backend/internal/db"
 	apphttp "newsletter-backend/internal/http"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Could not load .env:", err)
+	}
+
 	ctx, cancel := context.WithTimeout(
 		context.Background(),
 		5*time.Second,
@@ -29,25 +36,48 @@ func main() {
 	categories := apphttp.NewCategoryHandler(queries)
 	subscribers := apphttp.NewSubscriberHandler(queries)
 	comments := apphttp.NewCommentHandler(queries)
+	adminAuth := apphttp.NewAdminAuthHandler()
+
+	//ADMIN AUTH ROUTES
+	mux.HandleFunc("POST /admin/login", adminAuth.Login)
+	mux.HandleFunc("POST /admin/logout", adminAuth.Logout)
+	mux.Handle("GET /admin/me",
+		adminAuth.RequireAuth(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte(`{"authenticated":true}`))
+		})),
+	)
 
 	//ARTICLE ROUTES
 	mux.HandleFunc("GET /health", apphttp.HealthHandler)
 	mux.HandleFunc("GET /articles", articles.ListPublished)
-	mux.HandleFunc("GET /articles/all", articles.ListAll)
+	mux.Handle("GET /articles/all",
+		adminAuth.RequireAuth(http.HandlerFunc(articles.ListAll)),
+	)
 	mux.HandleFunc("GET /articles/{slug}", articles.GetBySlug)
-	mux.HandleFunc("POST /articles", articles.Create)
-	mux.HandleFunc("PUT /articles/{id}", articles.Update)
-	mux.HandleFunc("DELETE /articles/{id}", articles.Delete)
+	mux.Handle("POST /articles",
+		adminAuth.RequireAuth(http.HandlerFunc(articles.Create)),
+	)
+	mux.Handle("PUT /articles/{id}",
+		adminAuth.RequireAuth(http.HandlerFunc(articles.Update)),
+	)
+	mux.Handle("DELETE /articles/{id}",
+		adminAuth.RequireAuth(http.HandlerFunc(articles.Delete)),
+	)
 
 	//CATEGORY ROUTES
 	mux.HandleFunc("GET /categories", categories.List)
-	mux.HandleFunc("POST /categories", categories.Create)
+	mux.Handle("POST /categories",
+		adminAuth.RequireAuth(http.HandlerFunc(categories.Create)),
+	)
 
 	//SUBSCRIBER ROUTES
-	mux.HandleFunc("GET /subscribers", subscribers.List)
+	mux.Handle("GET /subscribers",
+		adminAuth.RequireAuth(http.HandlerFunc(subscribers.List)),
+	)
 	mux.HandleFunc("POST /subscribe", subscribers.Subscribe)
 
-	//SUBSCRIBER ROUTES
+	//COMMENT ROUTES
 	mux.HandleFunc("GET /articles/{id}/comments", comments.List)
 	mux.HandleFunc("POST /articles/{id}/comments", comments.Create)
 

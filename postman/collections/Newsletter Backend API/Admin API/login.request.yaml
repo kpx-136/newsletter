@@ -1,0 +1,14 @@
+$kind: http-request
+description: ""
+url: http://localhost:8080/admin/login
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"admin@example.com\",\r
+
+    \    \"password\": \"justinbieberrrrr\"\r
+
+    }"
+order: 1000
