@@ -1,46 +1,116 @@
 $kind: http-request
 description: ""
-url: http://localhost:8080/articles/cfaa2948-cfa4-4e95-93e9-5a855796003a
+url: http://localhost:8080/articles/06eaa5be-8936-4f2a-94a9-494b3ab89b1f
 method: PUT
 body:
   type: json
   content: "{\r
 
-    \  \"Slug\": \"article-with-image\",\r
+    \  \"title\": \"big article\",\r
 
-    \  \"Title\": \"Had to create one hehe\",\r
-
-    \  \"Description\": \"meow meow meow meow meow. \",\r
+    \  \"description\": \"to test the article reading page\",\r
 
     \  \"contents\": {\r
 
-    \    \"type\": \"doc\",\r
+    \  \"type\": \"doc\",\r
 
-    \    \"content\": [\r
+    \  \"content\": [\r
 
-    \      {\r
+    \    {\r
 
-    \        \"type\": \"paragraph\",\r
+    \      \"type\": \"paragraph\",\r
 
-    \        \"content\": [\r
+    \      \"content\": [\r
 
-    \          {\r
+    \        {\r
 
-    \            \"type\": \"text\",\r
+    \          \"type\": \"text\",\r
 
-    \            \"text\": \"Hello from my newsletter backend!\"\r
+    \          \"text\": \"Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\"\r
 
-    \          }\r
+    \        }\r
 
-    \        ]\r
+    \      ]\r
 
-    \      }\r
+    \    },\r
 
-    \    ]\r
+    \    {\r
 
-    \  },\r
+    \      \"type\": \"paragraph\",\r
 
-    \  \"cover_image\": \"https://upload.wikimedia.org/wikipedia/commons/5/53/Sheba1.JPG?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled\",\r
+    \      \"content\": [\r
+
+    \        {\r
+
+    \          \"type\": \"text\",\r
+
+    \          \"text\": \"Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\"\r
+
+    \        }\r
+
+    \      ]\r
+
+    \    },\r
+
+    \    {\r
+
+    \      \"type\": \"paragraph\",\r
+
+    \      \"content\": [\r
+
+    \        {\r
+
+    \          \"type\": \"text\",\r
+
+    \          \"text\": \"Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\"\r
+
+    \        }\r
+
+    \      ]\r
+
+    \    },\r
+
+    \    {\r
+
+    \      \"type\": \"paragraph\",\r
+
+    \      \"content\": [\r
+
+    \        {\r
+
+    \          \"type\": \"text\",\r
+
+    \          \"text\": \"Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\"\r
+
+    \        }\r
+
+    \      ]\r
+
+    \    },\r
+
+    \    {\r
+
+    \      \"type\": \"paragraph\",\r
+
+    \      \"content\": [\r
+
+    \        {\r
+
+    \          \"type\": \"text\",\r
+
+    \          \"text\": \"Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.\"\r
+
+    \        }\r
+
+    \      ]\r
+
+    \    }\r
+
+    \  ]\r
+
+    },\r
+
+    \  \"cover_image\": null,\r
 
     \  \"tags\": [\"welcome\", \"newsletter\"],\r
 

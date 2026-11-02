@@ -90,70 +90,43 @@ func decodeArticleRequest(
 	return &req, true
 }
 
-func validateArticleRequest(req *CreateArticleRequest) *APIError {
-	if req.Slug == "" || strings.TrimSpace(req.Slug) == "" {
-		return &APIError{
-			Code:    "VALIDATION_ERROR",
-			Message: "Article slug is required.",
-			Details: "Provide a non-empty slug.",
-		}
+func validateCreateArticleRequest(req *CreateArticleRequest) *APIError {
+	if strings.TrimSpace(req.Slug) == "" {
+		return &APIError{Code: "VALIDATION_ERROR", Message: "Article slug is required.", Details: "Provide a non-empty slug."}
 	}
 
-	if req.Title == "" || strings.TrimSpace(req.Title) == "" {
-		return &APIError{
-			Code:    "VALIDATION_ERROR",
-			Message: "Article title is required.",
-			Details: "Provide a non-empty title.",
-		}
-	}
+	return validateArticleFields(req)
+}
 
-	if req.Description == "" || strings.TrimSpace(req.Description) == "" {
-		return &APIError{
-			Code:    "VALIDATION_ERROR",
-			Message: "Article description is required.",
-			Details: "Provide a non-empty description.",
-		}
-	}
+func validateUpdateArticleRequest(req *CreateArticleRequest) *APIError {
+	return validateArticleFields(req)
+}
 
-	if req.Type == "" || strings.TrimSpace(req.Type) == "" {
+func validateArticleFields(req *CreateArticleRequest) *APIError {
+	if strings.TrimSpace(req.Title) == "" ||
+		strings.TrimSpace(req.Description) == "" ||
+		strings.TrimSpace(req.Type) == "" ||
+		req.EstimatedReadTime < 1 {
 		return &APIError{
 			Code:    "VALIDATION_ERROR",
-			Message: "Article type is required.",
-			Details: "Provide a valid article type.",
-		}
-	}
-
-	if req.EstimatedReadTime < 1 {
-		return &APIError{
-			Code:    "VALIDATION_ERROR",
-			Message: "Invalid estimated reading time.",
-			Details: "Estimated reading time must be at least one minute.",
+			Message: "Missing or invalid article fields.",
+			Details: "Title, description, type and a valid reading time are required.",
 		}
 	}
 
 	if len(req.Contents) == 0 ||
 		!json.Valid(req.Contents) ||
 		bytes.Equal(bytes.TrimSpace(req.Contents), []byte("null")) {
-
 		return &APIError{
 			Code:    "VALIDATION_ERROR",
 			Message: "Invalid article contents.",
-			Details: "Contents must contain a valid, non-null JSON value.",
-		}
-	}
-
-	if req.Status == "" {
-		return &APIError{
-			Code:    "VALIDATION_ERROR",
-			Message: "Article status is required.",
-			Details: "Choose draft, published, or archived.",
+			Details: "Contents must contain valid, non-null JSON.",
 		}
 	}
 
 	if req.Status != "draft" &&
 		req.Status != "published" &&
 		req.Status != "archived" {
-
 		return &APIError{
 			Code:    "VALIDATION_ERROR",
 			Message: "Invalid article status.",
@@ -248,9 +221,22 @@ func (h *ArticleHandler) GetBySlug(
 		return
 	}
 
+	response, err := toArticleResponse(article)
+	if err != nil {
+		log.Printf("convert article response: %v", err)
+		writeAPIError(
+			w,
+			http.StatusInternalServerError,
+			"ARTICLE_SERIALIZATION_FAILED",
+			"Could not serialize article.",
+			"Please try again later.",
+		)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 
-	if err := json.NewEncoder(w).Encode(article); err != nil {
+	if err := json.NewEncoder(w).Encode(response); err != nil {
 		log.Printf("encode article: %v", err)
 	}
 }
@@ -264,7 +250,7 @@ func (h *ArticleHandler) Create(
 		return
 	}
 
-	if validationErr := validateArticleRequest(req); validationErr != nil {
+	if validationErr := validateCreateArticleRequest(req); validationErr != nil {
 		writeAPIError(
 			w,
 			http.StatusBadRequest,
@@ -342,7 +328,24 @@ func (h *ArticleHandler) Create(
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 
-	if err := json.NewEncoder(w).Encode(article); err != nil {
+	response, err := toArticleResponse(article)
+	if err != nil {
+		log.Printf("convert created article response: %v", err)
+
+		writeAPIError(
+			w,
+			http.StatusInternalServerError,
+			"ARTICLE_SERIALIZATION_FAILED",
+			"Could not serialize article.",
+			"Please try again later.",
+		)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+
+	if err := json.NewEncoder(w).Encode(response); err != nil {
 		log.Printf("encode created article: %v", err)
 	}
 }
@@ -371,7 +374,7 @@ func (h *ArticleHandler) Update(
 		return
 	}
 
-	if validationErr := validateArticleRequest(req); validationErr != nil {
+	if validationErr := validateUpdateArticleRequest(req); validationErr != nil {
 		writeAPIError(
 			w,
 			http.StatusBadRequest,
@@ -410,7 +413,6 @@ func (h *ArticleHandler) Update(
 		r.Context(),
 		db.UpdateArticleParams{
 			ID:                articleID,
-			Slug:              req.Slug,
 			Title:             req.Title,
 			Description:       req.Description,
 			Contents:          []byte(req.Contents),
@@ -458,10 +460,25 @@ func (h *ArticleHandler) Update(
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	response, err := toArticleResponse(article)
+	if err != nil {
+		log.Printf("convert created article response: %v", err)
 
-	if err := json.NewEncoder(w).Encode(article); err != nil {
-		log.Printf("encode updated article: %v", err)
+		writeAPIError(
+			w,
+			http.StatusInternalServerError,
+			"ARTICLE_SERIALIZATION_FAILED",
+			"Could not serialize article.",
+			"Please try again later.",
+		)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		log.Printf("encode created article: %v", err)
 	}
 }
 

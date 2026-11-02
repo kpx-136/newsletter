@@ -35,7 +35,21 @@ export const Home = () => {
         { left: '75%', top: '265px', rotate: '5deg', zIndex: 3 },
     ];
 
-    const isMobile = window.innerWidth <= 480;
+    const [isMobile, setIsMobile] = useState(
+        window.innerWidth <= 480
+    );
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 480);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const mobileCardPositions = [
         { left: '2%', top: '20px', rotate: '-4deg', zIndex: 2 },
@@ -45,6 +59,9 @@ export const Home = () => {
         { left: '3%', top: '590px', rotate: '-3deg', zIndex: 2 },
         { left: '52%', top: '700px', rotate: '4deg', zIndex: 3 },
     ];
+
+    const positions = isMobile ? mobileCardPositions : cardPositions;
+    const rowOffset = isMobile ? 900 : 500;
 
     useEffect(() => {
         async function fetchArticles() {
@@ -69,15 +86,35 @@ export const Home = () => {
             <main className = "home">
                 <p>Explore the archive...</p>
 
-                <section className = "article-scatter">
+                <section className = "article-scatter" style={{
+                                                            minHeight: `${
+                                                                articles.length === 0
+                                                                    ? (isMobile ? 900 : 650)
+                                                                    : Math.max(
+                                                                        0,
+                                                                        ...articles.map((_, index) => {
+                                                                            const row = Math.floor(index / positions.length);
+                                                                            return (
+                                                                                row * rowOffset +
+                                                                                parseInt(positions[index % positions.length].top) +
+                                                                                300
+                                                                            );
+                                                                        })
+                                                                    )
+                                                            }px`
+                                                        }}>
                     {loading && <h1>Loading articles...</h1>}
                     {error && <h1>{error}</h1>}
 
                     {
                         articles.map((article, index) => {
-                            const position = isMobile ? 
-                                mobileCardPositions[index % mobileCardPositions.length] : 
-                                cardPositions[index % cardPositions.length];
+                            
+                            const positionIndex = index % positions.length;
+                            const row = Math.floor(index / positions.length);
+
+                            const position = positions[positionIndex]; 
+                            
+        
                             return(
                                 <ArticleCard 
                                     key = {article.ID}
@@ -86,7 +123,7 @@ export const Home = () => {
                                     isSelected = {selectedArticle?.ID === article.ID}
                                     style={{
                                         left: position.left,
-                                        top: position.top,
+                                        top: `calc(${position.top} + ${row * rowOffset}px)`,
                                         transform: `rotate(${position.rotate}deg)`,
                                         '--card-z': position.zIndex
                                     } as React.CSSProperties}
