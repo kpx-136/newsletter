@@ -1,7 +1,8 @@
-import type {Article} from '../types/article';
+import type { Article } from '../types/article';
 
-const API_URL = import.meta.env.VITE_API_URL; 
+const API_URL = import.meta.env.VITE_API_URL;
 
+// GET PUBLISHED ARTICLES
 export async function getPublishedArticles(): Promise<Article[]> {
     const response = await fetch(`${API_URL}/articles`);
 
@@ -12,6 +13,7 @@ export async function getPublishedArticles(): Promise<Article[]> {
     return response.json();
 }
 
+// CREATE ARTICLE
 export interface CreateArticlePayload {
     slug: string;
     title: string;
@@ -28,9 +30,9 @@ export interface CreateArticlePayload {
 export async function createArticle(
     article: CreateArticlePayload
 ): Promise<Article> {
-
     const response = await fetch(`${API_URL}/articles`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -44,6 +46,7 @@ export async function createArticle(
     return response.json();
 }
 
+// GET ARTICLE BY SLUG
 export async function getArticleBySlug(
     slug: string
 ): Promise<Article> {
@@ -53,6 +56,51 @@ export async function getArticleBySlug(
 
     if (!response.ok) {
         throw new Error('Failed to fetch article');
+    }
+
+    return response.json();
+}
+
+// UPDATE ARTICLE
+export async function updateArticle(
+    id: string,
+    article: CreateArticlePayload
+): Promise<Article> {
+    const response = await fetch(`${API_URL}/articles/${id}`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(article),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to update article');
+    }
+
+    return response.json();
+}
+
+// DELETE ARTICLE
+export async function deleteArticle(id: string): Promise<void> {
+    const response = await fetch(`${API_URL}/articles/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to delete article');
+    }
+}
+
+export async function getAllArticles(): Promise<Article[]> {
+    const response = await fetch(`${API_URL}/articles/all`, {
+        credentials: 'include',
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch all articles');
     }
 
     return response.json();

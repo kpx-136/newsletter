@@ -36,7 +36,7 @@ export const AdminLogin = () => {
                 throw new Error(message || 'Login failed.');
             }
 
-            navigate('/admin');
+            navigate('/admin/dashboard');
         } catch (err) {
             setError(
                 err instanceof Error
