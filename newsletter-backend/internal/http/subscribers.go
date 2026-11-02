@@ -1,4 +1,3 @@
-
 package http
 
 import (
@@ -83,6 +82,12 @@ func (h *SubscriberHandler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	subscriber, err := h.queries.CreateSubscriber(r.Context(), req.Email)
 	if err != nil {
 		log.Printf("create subscriber: %v", err)
+
+		if isUniqueViolation(err) {
+			http.Error(w, "This email is already subscribed.", http.StatusConflict)
+			return
+		}
+
 		http.Error(w, "Could not create subscriber", http.StatusInternalServerError)
 		return
 	}
