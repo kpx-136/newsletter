@@ -1,3 +1,5 @@
+import type { Subscriber } from "../types/subscriber";
+
 const API_URL = import.meta.env.VITE_API_URL; 
 
 export interface SubscribeRequest {
@@ -17,3 +19,15 @@ export const subscribe = async (email: string): Promise<void> => {
         throw new Error('Subscription failed');
     }
 };
+
+export async function getSubscribers(): Promise<Subscriber[]> {
+    const response = await fetch(`${API_URL}/subscribers`, {
+        credentials: 'include',
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch subscribers');
+    }
+
+    return response.json();
+}

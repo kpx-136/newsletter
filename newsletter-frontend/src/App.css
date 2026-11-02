@@ -1573,7 +1573,7 @@ main {
     margin: 0 0 12px;
 
     font-family: 'Kameron', serif;
-    font-size: clamp(1.15rem, 2vw, 1.45rem);
+    font-size: 0.95rem;
     font-weight: 400;
     line-height: 1.4;
 
@@ -2057,4 +2057,75 @@ main {
     .category-create-form {
         padding: 25px 20px;
     }
+}
+
+.admin-empty h3 {
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.admin-empty p {
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.admin-article-row {
+    transition: background 0.25s ease;
+}
+
+.admin-article-row:hover {
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.admin-article-info .admin-eyebrow {
+    display: block;
+    margin-bottom: 10px;
+    letter-spacing: 0.12em;
+    font-size: 0.65rem;
+}
+
+
+
+
+.not-found {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    background: var(--background);
+}
+
+.not-found h1 {
+    font-family: var(--heading-font);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 400;
+    margin: 24px 0 16px;
+}
+
+.not-found p {
+    max-width: 420px;
+    line-height: 1.8;
+    opacity: 0.65;
+    margin-bottom: 32px;
+}
+
+.not-found button {
+    padding: 14px 26px;
+    background: transparent;
+    border-radius: 10px;
+    border: 1px solid var(--transparent-whitey);
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    transition: all 0.25s ease;
+}
+
+.not-found button:hover {
+    background: var(--transparent-whitey);
+    color: var(--black);
 }
